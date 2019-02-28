@@ -1,4 +1,4 @@
-package com.example.music.get_music_demo.main.main;
+package com.example.music.get_music_demo.main;
 
 import android.app.SearchManager;
 import android.arch.lifecycle.Observer;
@@ -12,20 +12,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.music.get_music_demo.R;
 import com.example.music.get_music_demo.connection.MusicInfoResponse;
-import com.example.music.get_music_demo.log.LogHelper;
-import com.example.music.get_music_demo.main.GetMusicInfoFactory;
-import com.example.music.get_music_demo.main.GetMusicInfoViewModel;
 import com.google.gson.Gson;
 
+import es.dmoral.toasty.Toasty;
+
 public class MainActivity extends AppCompatActivity {
+
+    private GetMusicInfoViewModel getBalanceViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        initData();
+        initView();
+    }
+
+    private void initData() {
+        GetMusicInfoFactory getMusicInfoFactory = new GetMusicInfoFactory();
+        getBalanceViewModel = ViewModelProviders.of(this, getMusicInfoFactory).get(GetMusicInfoViewModel.class);
+    }
+
+    private void initView() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -41,19 +53,21 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        GetMusicInfoFactory getMusicInfoFactory = new GetMusicInfoFactory();
-        GetMusicInfoViewModel getBalanceViewModel = ViewModelProviders.of(this, getMusicInfoFactory).get(GetMusicInfoViewModel.class);
-        getBalanceViewModel.getMusicInfo("john").observe(this, new Observer<MusicInfoResponse>() {
+    }
+
+    private void callGetMusicInfoApi(String query){
+        getBalanceViewModel.getMusicInfo(query).observe(this, new Observer<MusicInfoResponse>() {
             @Override
             public void onChanged(@Nullable MusicInfoResponse musicInfoResponse) {
                 if(musicInfoResponse.isHttpSuccess()){
                     if(musicInfoResponse.isSuccess()){
-                        LogHelper.print("!!<res:"+new Gson().toJson(musicInfoResponse));
+                        Gson gson = new Gson();
+                        String json = gson.toJson(musicInfoResponse);
                     } else{
-
+                        Toasty.warning(getApplicationContext(), "撈取資料失敗").show();
                     }
                 } else{
-
+                    Toasty.warning(getApplicationContext(), "網路失敗").show();
                 }
             }
         });
@@ -62,17 +76,30 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main, menu);
-
         MenuItem menuSearchItem = menu.findItem(R.id.search);
-
-        // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menuSearchItem.getActionView();
-
-        // Assumes current activity is the searchable activity
+        final SearchView searchView = (SearchView) menuSearchItem.getActionView();
+        searchView.setSubmitButtonEnabled(true);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        // 這邊讓icon可以還原到搜尋的icon
         searchView.setIconifiedByDefault(true);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                callGetMusicInfoApi(s);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+                }
+                searchView.clearFocus();
+                return true;
+
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
         return true;
     }
 

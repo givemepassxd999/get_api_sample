@@ -1,13 +1,8 @@
 package com.example.music.get_music_demo.connection;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Response {
-    @SerializedName("Success")
     private boolean success;
-    @SerializedName("Code")
-    private String code;
-    @SerializedName("Message")
+    private int code;
     private String message;
 
     private boolean isHttpSuccess = true;
@@ -36,11 +31,11 @@ public class Response {
         this.success = success;
     }
 
-    public String getCode() {
+    public int getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(int code) {
         this.code = code;
     }
 

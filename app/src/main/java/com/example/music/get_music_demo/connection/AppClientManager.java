@@ -27,9 +27,7 @@ public class AppClientManager {
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String message) {
-                if(message.contains("AuthToken") || message.contains("200 OK") || message.contains("{") || message.contains("-->")) {
-                    LogHelper.print("!!<http:" + message);
-                }
+                LogHelper.print("!!<http:" + message);
 
             }
         });

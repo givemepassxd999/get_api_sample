@@ -5,6 +5,8 @@ import android.arch.lifecycle.MutableLiveData;
 import com.example.music.get_music_demo.connection.ApiListManager;
 import com.example.music.get_music_demo.connection.MusicInfoResponse;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,6 +23,8 @@ public class GetMusicInfoDataModel {
                 if(res == null){
                     res = new MusicInfoResponse();
                 }
+                List<MusicInfoResponse.Result> results = res.getResults();
+                res.setSuccess(results != null);
                 balanceRes.setValue(res);
             }
 
