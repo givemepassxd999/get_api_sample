@@ -2,8 +2,9 @@ package com.example.music.get_music_demo.main;
 
 import android.arch.lifecycle.MutableLiveData;
 
-import com.example.music.get_music_demo.connection.ApiListManager;
-import com.example.music.get_music_demo.connection.MusicInfoResponse;
+import com.example.music.get_music_demo.connection.api.MusicInfoResponse;
+import com.example.music.get_music_demo.connection.common.ApiListManager;
+import com.example.music.get_music_demo.database.MusicInfo;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.example.music.get_music_demo.connection.Config.BASE_URL;
+import static com.example.music.get_music_demo.connection.common.Config.BASE_URL;
 
 public class GetMusicInfoDataModel {
     public MutableLiveData<MusicInfoResponse> getMusicInfo(String value){
@@ -23,8 +24,8 @@ public class GetMusicInfoDataModel {
                 if(res == null){
                     res = new MusicInfoResponse();
                 }
-                List<MusicInfoResponse.Result> results = res.getResults();
-                res.setSuccess(results != null);
+                List<MusicInfo> musicInfos = res.getMusicInfos();
+                res.setSuccess(musicInfos != null);
                 balanceRes.setValue(res);
             }
 

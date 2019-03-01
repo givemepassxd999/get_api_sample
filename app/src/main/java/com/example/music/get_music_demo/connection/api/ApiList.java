@@ -1,4 +1,4 @@
-package com.example.music.get_music_demo.connection;
+package com.example.music.get_music_demo.connection.api;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

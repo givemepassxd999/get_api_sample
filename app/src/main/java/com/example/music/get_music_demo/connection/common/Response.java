@@ -1,4 +1,4 @@
-package com.example.music.get_music_demo.connection;
+package com.example.music.get_music_demo.connection.common;
 
 public class Response {
     private boolean success;

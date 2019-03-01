@@ -12,21 +12,21 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.music.get_music_demo.R;
-import com.example.music.get_music_demo.connection.MusicInfoResponse;
+import com.example.music.get_music_demo.database.MusicInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MusicInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<MusicInfoResponse.Result> infoDatas;
+    private List<MusicInfo> infoDatas;
     private Context context;
     public MusicInfoAdapter(Context context) {
         this.context = context;
         infoDatas = new ArrayList<>();
     }
 
-    public void setData(List<MusicInfoResponse.Result> infoDatas){
+    public void setData(List<MusicInfo> infoDatas){
         if(infoDatas != null) {
             this.infoDatas.clear();
             this.infoDatas.addAll(infoDatas);
@@ -43,20 +43,20 @@ public class MusicInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
         MusicInfoItem musicInfoItem = (MusicInfoItem) viewHolder;
-        final MusicInfoResponse.Result result = infoDatas.get(position);
-        String trackName = result.getTrackName();
+        final MusicInfo musicInfo = infoDatas.get(position);
+        String trackName = musicInfo.getTrackName();
         if(!TextUtils.isEmpty(trackName)) {
             musicInfoItem.trackName.setText(trackName);
         }
-        String collectionName = result.getCollectionName();
+        String collectionName = musicInfo.getCollectionName();
         if(!TextUtils.isEmpty(collectionName)) {
             musicInfoItem.collectionName.setText(collectionName);
         }
-        Glide.with(context).load(result.getArtworkUrl100()).into(musicInfoItem.coverImg);
+        Glide.with(context).load(musicInfo.getArtworkUrl100()).into(musicInfoItem.coverImg);
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = result.getPreviewUrl();
+                String url = musicInfo.getPreviewUrl();
                 MediaPlayer mediaPlayer = new MediaPlayer();
                 mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
                 try {

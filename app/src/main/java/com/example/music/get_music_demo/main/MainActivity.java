@@ -17,17 +17,21 @@ import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.music.get_music_demo.R;
-import com.example.music.get_music_demo.connection.MusicInfoResponse;
+import com.example.music.get_music_demo.connection.api.MusicInfoResponse;
+import com.example.music.get_music_demo.database.MusicInfo;
+import com.example.music.get_music_demo.database.MusicInfoDBHelper;
 
 import java.util.List;
-
-import es.dmoral.toasty.Toasty;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
     private GetMusicInfoViewModel getBalanceViewModel;
     private RecyclerView recyclerView;
     private MusicInfoAdapter adapter;
+    private MusicInfoDBHelper musicInfoDBHelper;
+    private ExecutorService executorService;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,9 @@ public class MainActivity extends AppCompatActivity {
     private void initData() {
         GetMusicInfoFactory getMusicInfoFactory = new GetMusicInfoFactory();
         getBalanceViewModel = ViewModelProviders.of(this, getMusicInfoFactory).get(GetMusicInfoViewModel.class);
+        musicInfoDBHelper = new MusicInfoDBHelper();
+        musicInfoDBHelper.createDB(this);
+        executorService = Executors.newSingleThreadExecutor();
     }
 
     private void initView() {
@@ -61,22 +68,44 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void callGetMusicInfoApi(String query){
+    private void callGetMusicInfoApi(final String query){
         getBalanceViewModel.getMusicInfo(query).observe(this, new Observer<MusicInfoResponse>() {
             @Override
             public void onChanged(@Nullable MusicInfoResponse musicInfoResponse) {
                 if(musicInfoResponse.isHttpSuccess()){
                     if(musicInfoResponse.isSuccess()){
-                        List<MusicInfoResponse.Result> results = musicInfoResponse.getResults();
-                        if(results != null) {
-                            adapter.setData(results);
+                        final List<MusicInfo> musicInfos = musicInfoResponse.getMusicInfos();
+                        if(musicInfos != null) {
+                            adapter.setData(musicInfos);
                             adapter.notifyDataSetChanged();
+                            executorService.submit(new Runnable() {
+                                @Override
+                                public void run() {
+                                    for(MusicInfo musicInfo : musicInfos){
+                                        musicInfo.setKeyword(query);
+                                        musicInfoDBHelper.insertData(musicInfo);
+                                    }
+                                }
+                            });
                         }
                     } else{
-                        Toasty.warning(getApplicationContext(), "撈取資料失敗").show();
+                        queryDb(query);
                     }
                 } else{
-                    Toasty.warning(getApplicationContext(), "網路失敗").show();
+                    queryDb(query);
+                }
+            }
+        });
+    }
+
+    private void queryDb(final String query){
+        executorService.submit(new Runnable() {
+            @Override
+            public void run() {
+                final List<MusicInfo> musicInfos = musicInfoDBHelper.queryData(query);
+                if(musicInfos != null) {
+                    adapter.setData(musicInfos);
+                    adapter.notifyDataSetChanged();
                 }
             }
         });

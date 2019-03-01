@@ -1,4 +1,4 @@
-package com.example.music.get_music_demo.connection;
+package com.example.music.get_music_demo.connection.common;
 
 import com.example.music.get_music_demo.log.LogHelper;
 
