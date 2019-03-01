@@ -7,6 +7,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -16,14 +18,16 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.music.get_music_demo.R;
 import com.example.music.get_music_demo.connection.MusicInfoResponse;
-import com.google.gson.Gson;
+
+import java.util.List;
 
 import es.dmoral.toasty.Toasty;
 
 public class MainActivity extends AppCompatActivity {
 
     private GetMusicInfoViewModel getBalanceViewModel;
-
+    private RecyclerView recyclerView;
+    private MusicInfoAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,9 +54,11 @@ public class MainActivity extends AppCompatActivity {
         toolbar.setTitle("");
         toolbar.setNavigationIcon(R.drawable.ic_adb_black_24dp);
         setSupportActionBar(toolbar);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
+        recyclerView = findViewById(R.id.recycler_view);
+        adapter = new MusicInfoAdapter(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapter);
     }
 
     private void callGetMusicInfoApi(String query){
@@ -61,8 +67,11 @@ public class MainActivity extends AppCompatActivity {
             public void onChanged(@Nullable MusicInfoResponse musicInfoResponse) {
                 if(musicInfoResponse.isHttpSuccess()){
                     if(musicInfoResponse.isSuccess()){
-                        Gson gson = new Gson();
-                        String json = gson.toJson(musicInfoResponse);
+                        List<MusicInfoResponse.Result> results = musicInfoResponse.getResults();
+                        if(results != null) {
+                            adapter.setData(results);
+                            adapter.notifyDataSetChanged();
+                        }
                     } else{
                         Toasty.warning(getApplicationContext(), "撈取資料失敗").show();
                     }
