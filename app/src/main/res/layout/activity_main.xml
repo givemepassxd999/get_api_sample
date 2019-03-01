@@ -1,17 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:background="#dddddd"
-        android:layout_height="wrap_content"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <RelativeLayout
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:layout_width="match_parent"
-        android:minHeight="?attr/actionBarSize" />
-    <android.support.v7.widget.RecyclerView
-        android:layout_below="@id/toolbar"
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-</RelativeLayout>
+        android:layout_height="match_parent"
+        tools:context="com.example.music.get_music_demo.main.MainActivity">
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:background="#dddddd"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:minHeight="?attr/actionBarSize" />
+        <RelativeLayout
+            android:layout_below="@id/toolbar"
+            android:id="@+id/search_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_50sdp">
+            <Button
+                android:layout_centerVertical="true"
+                android:id="@+id/search_btn"
+                android:text="@string/search"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <EditText
+                android:paddingStart="@dimen/_10sdp"
+                android:hint="@string/search_song"
+                android:id="@+id/search_edit"
+                android:layout_toStartOf="@id/search_btn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </RelativeLayout>
+        <android.support.v7.widget.RecyclerView
+            android:layout_below="@id/search_layout"
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </RelativeLayout>
+</layout>
