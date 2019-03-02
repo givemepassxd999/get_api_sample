@@ -1,8 +1,6 @@
 package com.example.music.get_music_demo.main;
 
 import android.content.Context;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,7 +12,6 @@ import com.bumptech.glide.Glide;
 import com.example.music.get_music_demo.R;
 import com.example.music.get_music_demo.database.MusicInfo;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,16 +53,7 @@ public class MusicInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String url = musicInfo.getPreviewUrl();
-                MediaPlayer mediaPlayer = new MediaPlayer();
-                mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                try {
-                    mediaPlayer.setDataSource(url);
-                    mediaPlayer.prepare();
-                    mediaPlayer.start();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                new MediaPlayerDialog(context, musicInfo).show();
             }
         });
     }

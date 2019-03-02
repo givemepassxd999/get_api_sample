@@ -45,7 +45,7 @@ public class SearchFragment extends Fragment {
 
     private void initView(){
         loadingView = new CatLoadingView();
-        binding.toolbar.setTitle("");
+        binding.toolbar.setTitle("音樂試聽");
         binding.toolbar.setNavigationIcon(R.drawable.ic_adb_black_24dp);
         binding.searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +76,6 @@ public class SearchFragment extends Fragment {
         binding.clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LogHelper.print("##clear");
                 binding.searchEdit.getText().clear();
                 dismissKeyboard();
             }
