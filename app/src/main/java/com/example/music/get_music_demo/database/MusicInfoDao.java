@@ -12,7 +12,7 @@ import java.util.List;
 public interface MusicInfoDao {
     String MUSIC_INFO_TABLE = "music_info";
 
-    @Query("select * from " + MUSIC_INFO_TABLE + " where keyword >= :value")
+    @Query("select * from " + MUSIC_INFO_TABLE + " where keyword = :value")
     List<MusicInfo> query(String value);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
