@@ -4,11 +4,11 @@ import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModel;
 import android.content.Context;
-import android.support.annotation.Nullable;
 
 import com.example.music.get_music_demo.connection.api.MusicInfoResponse;
 import com.example.music.get_music_demo.database.MusicInfo;
 import com.example.music.get_music_demo.database.MusicInfoDBHelper;
+import com.example.music.get_music_demo.log.LogHelper;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -34,7 +34,7 @@ public class GetMusicInfoViewModel extends ViewModel {
     public void callGetMusicInfoApi(final String query){
         dataModel.getMusicInfo(query).observe((MainActivity)context, new Observer<MusicInfoResponse>() {
             @Override
-            public void onChanged(@Nullable MusicInfoResponse musicInfoResponse) {
+            public void onChanged(MusicInfoResponse musicInfoResponse) {
                 if(musicInfoResponse.isHttpSuccess()){
                     if(musicInfoResponse.isSuccess()){
                         final List<MusicInfo> musicInfos = musicInfoResponse.getMusicInfos();
@@ -44,6 +44,7 @@ public class GetMusicInfoViewModel extends ViewModel {
                                 @Override
                                 public void run() {
                                     for (MusicInfo musicInfo : musicInfos) {
+                                        LogHelper.print("##insert db:"+query);
                                         musicInfo.setKeyword(query);
                                         musicInfoDBHelper.insertData(musicInfo);
                                     }
@@ -61,12 +62,13 @@ public class GetMusicInfoViewModel extends ViewModel {
     }
 
     private void queryDb(final String query){
+        LogHelper.print("##query:"+query);
         executorService.submit(new Runnable() {
             @Override
             public void run() {
                 final List<MusicInfo> musicInfos = musicInfoDBHelper.queryData(query);
                 if(musicInfos != null) {
-                    musicDatas.setValue(musicInfos);
+                    musicDatas.postValue(musicInfos);
                 }
             }
         });

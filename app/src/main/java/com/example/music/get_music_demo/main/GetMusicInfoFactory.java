@@ -10,6 +10,7 @@ public class GetMusicInfoFactory implements ViewModelProvider.Factory {
     public GetMusicInfoFactory() {
         getMusicInfoDataModel = new GetMusicInfoDataModel();
     }
+    @SuppressWarnings("unchecked")
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
