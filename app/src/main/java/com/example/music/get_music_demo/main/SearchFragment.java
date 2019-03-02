@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.music.get_music_demo.R;
 import com.example.music.get_music_demo.database.MusicInfo;
 import com.example.music.get_music_demo.databinding.SearchFragmentBinding;
+import com.example.music.get_music_demo.log.LogHelper;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.List;
@@ -50,6 +53,34 @@ public class SearchFragment extends Fragment {
                 doSearch();
             }
         });
+        binding.searchEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(s.length() == 0){
+                    binding.clear.setVisibility(View.INVISIBLE);
+                    return;
+                }
+                binding.clear.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        binding.clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LogHelper.print("##clear");
+                binding.searchEdit.getText().clear();
+                dismissKeyboard();
+            }
+        });
         adapter = new MusicInfoAdapter(getContext());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         binding.recyclerView.setLayoutManager(linearLayoutManager);
@@ -62,12 +93,13 @@ public class SearchFragment extends Fragment {
         getBalanceViewModel = ViewModelProviders.of(this, getMusicInfoFactory).get(GetMusicInfoViewModel.class);
         getBalanceViewModel.setContext(getContext());
         binding.setViewModel(getBalanceViewModel);
+
         getBalanceViewModel.musicDatas.observe(this, new Observer<List<MusicInfo>>() {
             @Override
             public void onChanged(@Nullable final List<MusicInfo> musicInfos) {
+                loadingView.dismiss();
                 if(musicInfos != null) {
                     Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable(){
-
                         @Override
                         public void run() {
                             adapter.setData(musicInfos);
@@ -80,6 +112,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void doSearch() {
+        loadingView.show(getFragmentManager(), "");
         String s = binding.searchEdit.getText().toString();
         getBalanceViewModel.callGetMusicInfoApi(s);
         dismissKeyboard();
