@@ -8,7 +8,6 @@ import android.content.Context;
 import com.example.music.get_music_demo.connection.api.MusicInfoResponse;
 import com.example.music.get_music_demo.database.MusicInfo;
 import com.example.music.get_music_demo.database.MusicInfoDBHelper;
-import com.example.music.get_music_demo.log.LogHelper;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -17,21 +16,21 @@ import java.util.concurrent.Executors;
 public class GetMusicInfoViewModel extends ViewModel {
     private GetMusicInfoDataModel dataModel;
     private ExecutorService executorService;
-    public MutableLiveData<List<MusicInfo>> musicDatas = new MutableLiveData<>();
+    MutableLiveData<List<MusicInfo>> musicDatas = new MutableLiveData<>();
     private MusicInfoDBHelper musicInfoDBHelper;
-    private Context context;
-    public GetMusicInfoViewModel(GetMusicInfoDataModel dataModel) {
+    Context context;
+    GetMusicInfoViewModel(GetMusicInfoDataModel dataModel) {
         this.dataModel = dataModel;
         musicInfoDBHelper = new MusicInfoDBHelper();
         executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void setContext(Context context){
+    void setContext(Context context){
         this.context = context;
         musicInfoDBHelper.createDB(context);
     }
 
-    public void callGetMusicInfoApi(final String query){
+    void callGetMusicInfoApi(final String query){
         dataModel.getMusicInfo(query).observe((MainActivity)context, new Observer<MusicInfoResponse>() {
             @Override
             public void onChanged(MusicInfoResponse musicInfoResponse) {

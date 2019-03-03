@@ -1,5 +1,6 @@
 package com.example.music.get_music_demo.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Path;
@@ -20,7 +21,7 @@ public class CornerImageView extends android.support.v7.widget.AppCompatImageVie
     public CornerImageView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
-
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onDraw(Canvas canvas) {
         Path clipPath = new Path();

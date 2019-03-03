@@ -14,8 +14,8 @@ import retrofit2.Response;
 
 import static com.example.music.get_music_demo.connection.common.Config.BASE_URL;
 
-public class GetMusicInfoDataModel {
-    public MutableLiveData<MusicInfoResponse> getMusicInfo(String value){
+class GetMusicInfoDataModel {
+    MutableLiveData<MusicInfoResponse> getMusicInfo(String value){
         final MutableLiveData<MusicInfoResponse> balanceRes = new MutableLiveData<>();
         ApiListManager.getApiListManager(BASE_URL).getMusicInfo(value).enqueue(new Callback<MusicInfoResponse>() {
             @Override

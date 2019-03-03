@@ -22,7 +22,7 @@ import es.dmoral.toasty.Toasty;
 public class MusicInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<MusicInfo> infoDatas;
     private Context context;
-    public MusicInfoAdapter(Context context) {
+    MusicInfoAdapter(Context context) {
         this.context = context;
         infoDatas = new ArrayList<>();
     }

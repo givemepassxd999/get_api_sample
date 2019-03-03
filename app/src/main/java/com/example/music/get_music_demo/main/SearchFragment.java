@@ -110,18 +110,22 @@ public class SearchFragment extends Fragment {
     }
 
     private void doSearch() {
-        loadingView.show(getFragmentManager(), "");
-        String s = binding.searchEdit.getText().toString();
-        getBalanceViewModel.callGetMusicInfoApi(s);
-        dismissKeyboard();
+        if(getFragmentManager() != null) {
+            loadingView.show(getFragmentManager(), "");
+            String s = binding.searchEdit.getText().toString();
+            getBalanceViewModel.callGetMusicInfoApi(s);
+            dismissKeyboard();
+        }
     }
 
     private void dismissKeyboard() {
-        View view = getActivity().getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm =
-                    (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if(getActivity() != null) {
+            View view = getActivity().getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm =
+                        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
         }
     }
 

@@ -8,11 +8,11 @@ import android.widget.TextView;
 
 import com.example.music.get_music_demo.R;
 
-public class MusicInfoItem extends RecyclerView.ViewHolder {
-    public ImageView coverImg;
-    public TextView trackName;
-    public TextView collectionName;
-    public MusicInfoItem(@NonNull View itemView) {
+class MusicInfoItem extends RecyclerView.ViewHolder {
+    ImageView coverImg;
+    TextView trackName;
+    TextView collectionName;
+    MusicInfoItem(@NonNull View itemView) {
         super(itemView);
         coverImg = itemView.findViewById(R.id.cover_img);
         trackName = itemView.findViewById(R.id.trace_name);

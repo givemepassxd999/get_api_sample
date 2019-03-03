@@ -6,7 +6,6 @@ public class Response {
     private String message;
 
     private boolean isHttpSuccess = true;
-    private String errorMsg;
 
     public boolean isHttpSuccess() {
         return isHttpSuccess;
@@ -16,13 +15,6 @@ public class Response {
         this.isHttpSuccess = isHttpSuccess;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
     public boolean isSuccess() {
         return success;
     }
