@@ -44,7 +44,6 @@ public class GetMusicInfoViewModel extends ViewModel {
                                 @Override
                                 public void run() {
                                     for (MusicInfo musicInfo : musicInfos) {
-                                        LogHelper.print("##insert db:"+query);
                                         musicInfo.setKeyword(query);
                                         musicInfoDBHelper.insertData(musicInfo);
                                     }
@@ -62,7 +61,6 @@ public class GetMusicInfoViewModel extends ViewModel {
     }
 
     private void queryDb(final String query){
-        LogHelper.print("##query:"+query);
         executorService.submit(new Runnable() {
             @Override
             public void run() {

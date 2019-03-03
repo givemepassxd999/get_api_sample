@@ -20,16 +20,13 @@ import java.io.IOException;
 
 public class MediaPlayerDialog extends Dialog {
     private MediaPlayer mediaPlayer;
-    protected Context context;
-    private View outsideLayout;
+    private Context context;
     private MusicInfo musicInfo;
-    private ImageView coverImgView;
-    private TextView traceNameView;
-    private TextView collectionNameView;
-    private View play;
-    public MediaPlayerDialog(Context context, MusicInfo musicInfo) {
+    MediaPlayerDialog(Context context, MusicInfo musicInfo) {
         super(context, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
-        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if(getWindow() != null) {
+            getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
         this.context = context;
         this.musicInfo = musicInfo;
         final View mainView = LayoutInflater.from(context).inflate(R.layout.media_player_dialog, null);
@@ -37,11 +34,11 @@ public class MediaPlayerDialog extends Dialog {
     }
 
     private void initView(View mainView){
-        coverImgView = mainView.findViewById(R.id.cover_img);
-        traceNameView = mainView.findViewById(R.id.trace_name);
-        collectionNameView = mainView.findViewById(R.id.collection_name);
-        outsideLayout = mainView.findViewById(R.id.out_side_layout);
-        play = mainView.findViewById(R.id.play);
+        ImageView coverImgView = mainView.findViewById(R.id.cover_img);
+        TextView traceNameView = mainView.findViewById(R.id.trace_name);
+        TextView collectionNameView = mainView.findViewById(R.id.collection_name);
+        View outsideLayout = mainView.findViewById(R.id.out_side_layout);
+        View play = mainView.findViewById(R.id.play);
         outsideLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

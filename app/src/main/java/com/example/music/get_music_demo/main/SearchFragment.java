@@ -37,7 +37,7 @@ public class SearchFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = SearchFragmentBinding.inflate(inflater, container, false);
+        binding = SearchFragmentBinding.inflate(inflater, container);
         initView();
         return binding.getRoot();
     }
