@@ -27,21 +27,21 @@ public class MediaPlayerDialog extends Dialog {
     private TextView traceNameView;
     private TextView collectionNameView;
     private View play;
-    private View stop;
-    private View pause;
     public MediaPlayerDialog(Context context, MusicInfo musicInfo) {
         super(context, android.R.style.Theme_Material_Light_NoActionBar_Fullscreen);
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         this.context = context;
         this.musicInfo = musicInfo;
         final View mainView = LayoutInflater.from(context).inflate(R.layout.media_player_dialog, null);
+        initView(mainView);
+    }
+
+    private void initView(View mainView){
         coverImgView = mainView.findViewById(R.id.cover_img);
         traceNameView = mainView.findViewById(R.id.trace_name);
         collectionNameView = mainView.findViewById(R.id.collection_name);
         outsideLayout = mainView.findViewById(R.id.out_side_layout);
         play = mainView.findViewById(R.id.play);
-        stop = mainView.findViewById(R.id.stop);
-        pause = mainView.findViewById(R.id.pause);
         outsideLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,24 +59,15 @@ public class MediaPlayerDialog extends Dialog {
         Glide.with(context).load(musicInfo.getArtworkUrl100()).into(coverImgView);
         setContentView(mainView);
         initMediaPlayer();
+        play.setSelected(true);
         play.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mediaPlayer.start();
-            }
-        });
-        pause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mediaPlayer.pause();
-            }
-        });
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mediaPlayer.isPlaying()) {
-                    mediaPlayer.stop();
-                    initMediaPlayer();
+                v.setSelected(mediaPlayer.isPlaying());
+                if(mediaPlayer.isPlaying()){
+                    mediaPlayer.pause();
+                } else {
+                    mediaPlayer.start();
                 }
             }
         });

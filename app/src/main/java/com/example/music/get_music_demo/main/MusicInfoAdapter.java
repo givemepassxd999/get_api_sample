@@ -1,6 +1,8 @@
 package com.example.music.get_music_demo.main;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -14,6 +16,8 @@ import com.example.music.get_music_demo.database.MusicInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import es.dmoral.toasty.Toasty;
 
 public class MusicInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<MusicInfo> infoDatas;
@@ -53,9 +57,22 @@ public class MusicInfoAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new MediaPlayerDialog(context, musicInfo).show();
+                if(isConnected()) {
+                    new MediaPlayerDialog(context, musicInfo).show();
+                } else{
+                    Toasty.warning(context, R.string.check_network).show();
+                }
             }
         });
+    }
+
+    private boolean isConnected(){
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -18,7 +18,6 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.music.get_music_demo.R;
 import com.example.music.get_music_demo.database.MusicInfo;
 import com.example.music.get_music_demo.databinding.SearchFragmentBinding;
-import com.example.music.get_music_demo.log.LogHelper;
 import com.roger.catloadinglibrary.CatLoadingView;
 
 import java.util.List;

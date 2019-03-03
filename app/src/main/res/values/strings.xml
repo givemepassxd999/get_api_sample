@@ -3,4 +3,5 @@
     <string name="search">搜尋</string>
     <string name="search_song">請輸入欲搜尋的歌...</string>
     <string name="input_search_text">請輸入搜尋文字</string>
+    <string name="check_network">請檢查網路連線</string>
 </resources>
